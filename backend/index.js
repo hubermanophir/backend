@@ -23,7 +23,7 @@ app.post("/b", (req, res) => {
         if (err) {
           res.status(500).send("error " + err);
         } else {
-          res.send(body);
+          res.status(200).send(body);
         }
       }
     );
@@ -41,7 +41,7 @@ app.get("/b/:id", (req, res) => {
       if (err) {
         res.status(500).send("error" + err);
       } else {
-        res.send(data);
+        res.status(200).send(data);
       }
     });
   }
@@ -63,7 +63,7 @@ app.put("/b/:id", (req, res) => {
         if (err) {
           res.status(500).send("error" + err);
         } else {
-          res.send(body);
+          res.status(200).send(body);
         }
       }
     );
@@ -81,7 +81,7 @@ app.delete("/b/:id", (req, res) => {
       if (err) {
         res.status(500).send("error" + err);
       } else {
-        res.send("success!");
+        res.status(200).send("success!");
       }
     });
   }
@@ -92,16 +92,16 @@ app.get("/b", (req, res) => {
   const objects = fs.readdirSync("./src/backend/database");
   const arr = [];
   if (objects.length === 0) {
-    res.send("you have no objects");
+    res.status(404).send("you have no objects");
   } else {
     try {
       for (const object of objects) {
         const obj = fs.readFileSync(`./src/backend/database/${object}`);
         arr.push(JSON.parse(obj));
       }
-      res.send(arr);
+      res.status(200).send(arr);
     } catch (error) {
-      res.send("error" + er);
+      res.status(500).send("error" + er);
     }
   }
 });
