@@ -106,7 +106,7 @@ app.get("/b", (req, res) => {
       }
       res.status(200).send(arr);
     } catch (error) {
-      res.status(500).send("error" + er);
+      res.status(500).send("error" + error);
     }
   }
 });
