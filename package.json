@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --verbose --forceExit",
     "start": "node ./backend/app",
-    "dev":"nodemon ./backend/app"
+    "dev": "nodemon ./backend/app"
   },
   "repository": {
     "type": "git",
@@ -19,10 +19,13 @@
   },
   "homepage": "https://github.com/hubermanophir/backend#readme",
   "dependencies": {
+    "@types/jest": "^26.0.20",
     "express": "^4.17.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.7",
+    "jest": "^26.6.3",
+    "supertest": "^6.1.3"
   }
 }

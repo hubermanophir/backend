@@ -28,7 +28,7 @@ app.post("/b", (req, res) => {
         if (err) {
           return res.status(500).send("error " + err);
         } else {
-          return res.status(200).send(body);
+          return res.status(200).json(body);
         }
       }
     );
@@ -37,13 +37,13 @@ app.post("/b", (req, res) => {
 
 //get file with using the id
 app.get("/b/:id", (req, res) => {
-  if (req.params.id === /[a-zA-Z0-9]/) {
-    return res.status(404).json({
+  if (!req.params.id.match(/[a-zA-Z0-9]/)) {
+    return res.status(400).json({
       "message": "Invalid Id provided"
     });
   } else {
     if (!fs.existsSync(`./backend/database/${req.params.id}.json`)) {
-      return res.status(400).json({
+      return res.status(404).json({
         "message": "No bin with matching id"
       });
     } else {
@@ -51,7 +51,7 @@ app.get("/b/:id", (req, res) => {
         if (err) {
           return res.status(500).send("error" + err);
         } else {
-          return res.status(200).send(data);
+          return res.status(200).json(JSON.parse(data));
         }
       });
     }
@@ -62,7 +62,7 @@ app.get("/b/:id", (req, res) => {
 app.put("/b/:id", (req, res) => {
   const { body } = req;
   body.id = req.params.id;
-  if (req.params.id === /[a-zA-Z0-9]/) {
+  if (!req.params.id.match(/[a-zA-Z0-9]/)) {
     return res.status(404).json({
       "message": "Invalid Id provided"
     });
@@ -79,7 +79,7 @@ app.put("/b/:id", (req, res) => {
           if (err) {
             return res.status(500).send("error" + err);
           } else {
-            return res.status(200).send(body);
+            return res.status(200).json(JSON.parse(body));
           }
         }
       );
@@ -89,8 +89,8 @@ app.put("/b/:id", (req, res) => {
 
 //deletes an item using the id
 app.delete("/b/:id", (req, res) => {
-  if (req.params.id === /[a-zA-Z0-9]/) {
-    return res.status(404).json({
+  if (!req.params.id.match(/[a-zA-Z0-9]/)) {
+    return res.status(400).json({
       "message": "Invalid Id provided"
     });
   } else {
@@ -129,5 +129,11 @@ app.get("/b", (req, res) => {
   }
 });
 
-app.listen(PORT);
-console.log(`listening on port: ${PORT}`);
+
+
+app.listen(PORT, () => {
+  console.log(`listening on port: ${PORT}`);
+
+});
+
+module.exports = app;
