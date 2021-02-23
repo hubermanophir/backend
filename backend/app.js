@@ -17,7 +17,7 @@ app.post("/b", (req, res) => {
   const id = uuid.v4();
   if (Object.keys(body).length === 0) {
     return res.status(400).json({
-      "message": "Bin cannot be blank"
+      message: "Bin cannot be blank",
     });
   } else {
     body.id = id;
@@ -39,12 +39,12 @@ app.post("/b", (req, res) => {
 app.get("/b/:id", (req, res) => {
   if (!req.params.id.match(/[a-zA-Z0-9]/)) {
     return res.status(400).json({
-      "message": "Invalid Id provided"
+      message: "Invalid Id provided",
     });
   } else {
     if (!fs.existsSync(`./backend/database/${req.params.id}.json`)) {
       return res.status(404).json({
-        "message": "No bin with matching id"
+        message: "No bin with matching id",
       });
     } else {
       fs.readFile(`./backend/database/${req.params.id}.json`, (err, data) => {
@@ -64,12 +64,12 @@ app.put("/b/:id", (req, res) => {
   body.id = req.params.id;
   if (!req.params.id.match(/[a-zA-Z0-9]/)) {
     return res.status(400).json({
-      "message": "Invalid Id provided"
+      message: "Invalid Id provided",
     });
   } else {
     if (!fs.existsSync(`./backend/database/${req.params.id}.json`)) {
       return res.status(404).json({
-        "message": "Bin not found"
+        message: "Bin not found",
       });
     } else {
       fs.writeFile(
@@ -91,12 +91,12 @@ app.put("/b/:id", (req, res) => {
 app.delete("/b/:id", (req, res) => {
   if (!req.params.id.match(/[a-zA-Z0-9]/)) {
     return res.status(400).json({
-      "message": "Invalid Id provided"
+      message: "Invalid Id provided",
     });
   } else {
     if (!fs.existsSync(`./backend/database/${req.params.id}.json`)) {
       return res.status(401).json({
-        "message": "Bin not found or it doesn't belong to your account"
+        message: "Bin not found or it doesn't belong to your account",
       });
     } else {
       fs.unlink(`./backend/database/${req.params.id}.json`, (err) => {
@@ -129,11 +129,8 @@ app.get("/b", (req, res) => {
   }
 });
 
-
-
 app.listen(PORT, () => {
   console.log(`listening on port: ${PORT}`);
-
 });
 
 module.exports = app;
