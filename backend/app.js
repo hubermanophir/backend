@@ -16,9 +16,9 @@ app.post("/b", (req, res) => {
   const { body } = req;
   const id = uuid.v4();
   if (Object.keys(body).length === 0) {
-    return res.status(400).send(`{
+    return res.status(400).json({
       "message": "Bin cannot be blank"
-    }`);
+    });
   } else {
     body.id = id;
     fs.writeFile(
@@ -37,18 +37,24 @@ app.post("/b", (req, res) => {
 
 //get file with using the id
 app.get("/b/:id", (req, res) => {
-  if (!fs.existsSync(`./backend/database/${req.params.id}.json`)) {
-    return res.status(400).send(`{
-      "message": "Invalid Bin Id provided"
-    }`);
-  } else {
-    fs.readFile(`./backend/database/${req.params.id}.json`, (err, data) => {
-      if (err) {
-        return res.status(500).send("error" + err);
-      } else {
-        return res.status(200).send(data);
-      }
+  if (req.params.id === /[a-zA-Z0-9]/) {
+    return res.status(404).json({
+      "message": "Invalid Id provided"
     });
+  } else {
+    if (!fs.existsSync(`./backend/database/${req.params.id}.json`)) {
+      return res.status(400).json({
+        "message": "No bin with matching id"
+      });
+    } else {
+      fs.readFile(`./backend/database/${req.params.id}.json`, (err, data) => {
+        if (err) {
+          return res.status(500).send("error" + err);
+        } else {
+          return res.status(200).send(data);
+        }
+      });
+    }
   }
 });
 
@@ -56,39 +62,51 @@ app.get("/b/:id", (req, res) => {
 app.put("/b/:id", (req, res) => {
   const { body } = req;
   body.id = req.params.id;
-  if (!fs.existsSync(`./backend/database/${req.params.id}.json`)) {
-    return res.status(404).send(`{
-      "message": "Bin not found"
-    }`);
+  if (req.params.id === /[a-zA-Z0-9]/) {
+    return res.status(404).json({
+      "message": "Invalid Id provided"
+    });
   } else {
-    fs.writeFile(
-      `./backend/database/${req.params.id}.json`,
-      JSON.stringify(body, null, 4),
-      (err) => {
-        if (err) {
-          return res.status(500).send("error" + err);
-        } else {
-          return res.status(200).send(body);
+    if (!fs.existsSync(`./backend/database/${req.params.id}.json`)) {
+      return res.status(404).json({
+        "message": "Bin not found"
+      });
+    } else {
+      fs.writeFile(
+        `./backend/database/${req.params.id}.json`,
+        JSON.stringify(body, null, 4),
+        (err) => {
+          if (err) {
+            return res.status(500).send("error" + err);
+          } else {
+            return res.status(200).send(body);
+          }
         }
-      }
-    );
+      );
+    }
   }
 });
 
 //deletes an item using the id
 app.delete("/b/:id", (req, res) => {
-  if (!fs.existsSync(`./backend/database/${req.params.id}.json`)) {
-    return res.status(401).send(`{
-      "message": "Bin not found or it doesn't belong to your account"
-    }`);
-  } else {
-    fs.unlink(`./backend/database/${req.params.id}.json`, (err) => {
-      if (err) {
-        return res.status(500).send("error" + err);
-      } else {
-        return res.status(200).send("success!");
-      }
+  if (req.params.id === /[a-zA-Z0-9]/) {
+    return res.status(404).json({
+      "message": "Invalid Id provided"
     });
+  } else {
+    if (!fs.existsSync(`./backend/database/${req.params.id}.json`)) {
+      return res.status(401).json({
+        "message": "Bin not found or it doesn't belong to your account"
+      });
+    } else {
+      fs.unlink(`./backend/database/${req.params.id}.json`, (err) => {
+        if (err) {
+          return res.status(500).send("error" + err);
+        } else {
+          return res.status(200).send("success!");
+        }
+      });
+    }
   }
 });
 
