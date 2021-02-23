@@ -16,7 +16,7 @@ app.post("/b", (req, res) => {
   const { body } = req;
   const id = uuid.v4();
   if (Object.keys(body).length === 0) {
-    res.status(400).send(`{
+    return res.status(400).send(`{
       "message": "Bin cannot be blank"
     }`);
   } else {
@@ -26,9 +26,9 @@ app.post("/b", (req, res) => {
       JSON.stringify(body, null, 4),
       (err) => {
         if (err) {
-          res.status(500).send("error " + err);
+          return res.status(500).send("error " + err);
         } else {
-          res.status(200).send(body);
+          return res.status(200).send(body);
         }
       }
     );
@@ -38,15 +38,15 @@ app.post("/b", (req, res) => {
 //get file with using the id
 app.get("/b/:id", (req, res) => {
   if (!fs.existsSync(`./backend/database/${req.params.id}.json`)) {
-    res.status(400).send(`{
+    return res.status(400).send(`{
       "message": "Invalid Bin Id provided"
     }`);
   } else {
     fs.readFile(`./backend/database/${req.params.id}.json`, (err, data) => {
       if (err) {
-        res.status(500).send("error" + err);
+        return res.status(500).send("error" + err);
       } else {
-        res.status(200).send(data);
+        return res.status(200).send(data);
       }
     });
   }
@@ -57,7 +57,7 @@ app.put("/b/:id", (req, res) => {
   const { body } = req;
   body.id = req.params.id;
   if (!fs.existsSync(`./backend/database/${req.params.id}.json`)) {
-    res.status(404).send(`{
+    return res.status(404).send(`{
       "message": "Bin not found"
     }`);
   } else {
@@ -66,9 +66,9 @@ app.put("/b/:id", (req, res) => {
       JSON.stringify(body, null, 4),
       (err) => {
         if (err) {
-          res.status(500).send("error" + err);
+          return res.status(500).send("error" + err);
         } else {
-          res.status(200).send(body);
+          return res.status(200).send(body);
         }
       }
     );
@@ -78,15 +78,15 @@ app.put("/b/:id", (req, res) => {
 //deletes an item using the id
 app.delete("/b/:id", (req, res) => {
   if (!fs.existsSync(`./backend/database/${req.params.id}.json`)) {
-    res.status(401).send(`{
+    return res.status(401).send(`{
       "message": "Bin not found or it doesn't belong to your account"
     }`);
   } else {
     fs.unlink(`./backend/database/${req.params.id}.json`, (err) => {
       if (err) {
-        res.status(500).send("error" + err);
+        return res.status(500).send("error" + err);
       } else {
-        res.status(200).send("success!");
+        return res.status(200).send("success!");
       }
     });
   }
@@ -97,16 +97,16 @@ app.get("/b", (req, res) => {
   const objects = fs.readdirSync("./backend/database");
   const arr = [];
   if (objects.length === 0) {
-    res.status(404).send("you have no objects");
+    return res.status(404).send("you have no objects");
   } else {
     try {
       for (const object of objects) {
         const obj = fs.readFileSync(`./backend/database/${object}`);
-        arr.push(JSON.parse(obj));
+        return arr.push(JSON.parse(obj));
       }
       res.status(200).send(arr);
     } catch (error) {
-      res.status(500).send("error" + error);
+      return res.status(500).send("error" + error);
     }
   }
 });
