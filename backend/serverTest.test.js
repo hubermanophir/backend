@@ -97,7 +97,7 @@ describe("PUT route", () => {
 
 describe("DELETE route", () => {
   it("should not delete illegal id", async () => {
-    const response = await request(app).delete("/b/@*@#$");
+    const response = await request(app).delete("/b/@@#$");
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
       message: "Invalid Id provided",
@@ -107,12 +107,12 @@ describe("DELETE route", () => {
     const response = await request(app).delete("/b/not-found");
     expect(response.status).toBe(401);
     expect(response.body).toEqual({
-        "message": "Bin not found or it doesn't belong to your account"
-      });
-  });
-  it("should delete item with the corresponding bin id", async () => {
-    const response = await request(app).delete("/b/delete.json");
-    expect(response.status).toBe(200);
-    expect(response.body).toBe("success!");
-  });
+      message: "Bin not found or it doesn't belong to your account",
+    });
+});
+it("should delete item with the corresponding bin id", async () => {
+  const response = await request(app).delete("/b/delete");
+  expect(response.status).toBe(200);
+  expect(response.text).toBe("success!");
+});
 });
