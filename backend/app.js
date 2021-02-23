@@ -63,7 +63,7 @@ app.put("/b/:id", (req, res) => {
   const { body } = req;
   body.id = req.params.id;
   if (!req.params.id.match(/[a-zA-Z0-9]/)) {
-    return res.status(404).json({
+    return res.status(400).json({
       "message": "Invalid Id provided"
     });
   } else {
@@ -79,7 +79,7 @@ app.put("/b/:id", (req, res) => {
           if (err) {
             return res.status(500).send("error" + err);
           } else {
-            return res.status(200).json(JSON.parse(body));
+            return res.status(200).send(body);
           }
         }
       );
